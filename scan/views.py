@@ -30,7 +30,7 @@ def scan(request):
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):
             break
-    products = food.get_product("6191507220214")
+    products = food.get_product(barcodeData)
     if products["status"]==0:
         product_name = 'no name'
         brands_tag = 'no brand'
