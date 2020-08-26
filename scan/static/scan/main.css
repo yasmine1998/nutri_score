@@ -1,0 +1,21 @@
+body, html{
+background-color:#8ec127 ;
+    height: 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow-x: scroll;
+    padding:2px;
+    margin:2px;
+}
+  .content-section {
+    padding: 70px 30px;
+  }
+  .im {
+    margin: auto;
+  }
+  .bouton {
+    position:absolute;
+    top:90%;
+    right:45%;
+  }
