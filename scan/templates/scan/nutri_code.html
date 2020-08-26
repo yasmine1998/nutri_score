@@ -1,0 +1,127 @@
+{% extends "scan/base.html" %}
+{% block body %}
+<div class=" container-fluid">
+    <div class="row form-group">
+        <div class="col-sm-4 col-md-3">
+            <input type="button" onclick="location.href={% url 'scan' %}" value="Scanner (taper q pour arreter)" class="btn btn-danger btn-xl" />
+            <div class="card mr-5 mt-3" style="width: 18rem;">
+                {% if products.status != 0 %}
+                <img src="{{ image }}" class="card-img-top">
+                {% else %}
+                <h3>No image to display</h3>
+                {% endif %}
+                {% if brands_tag and product_name %}
+                <div class="figure-caption">
+                    <h2>{{ brands_tag }}-{{ product_name }}</h2>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-sm-8 col-md-9">
+            <div class="card mr-5 mt-3" >
+                <div class="figure-caption">
+                    <h2 style="color:#f47835";><strong>&nbsp;&nbsp;Infos : </strong></h2>
+                    <br/>
+                    {% if products.status != 0 %}
+                    <h4><strong>&nbsp;&nbsp;Pays: </strong>&nbsp;{{ products.product.countries }}</h4>
+                    <br/>
+                    <h4><strong>&nbsp;&nbsp;Allergenes:</strong>&nbsp;{{ products.product.allergens }}</h4>
+                    <br/>
+                    <h4><strong>&nbsp;&nbsp;Nova-groupe:</strong>
+                    {% if nova  %}
+                    {% if nova == 1  %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/NOVA_group_1.svg/320px-NOVA_group_1.svg.png?1598033585054" width="70px" hight="70px">
+                    <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Groupe 1 - Aliments non transformés ou transformés minimalement</h5> </h4>
+                    {% elif nova == 2  %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/NOVA_group_2.svg/320px-NOVA_group_2.svg.png" width="70px" hight="70px">
+                    <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Groupe 2 - Ingrédients culinaires transformés </h5></h4>
+                    {% elif nova == 3  %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/NOVA_group_3.svg/320px-NOVA_group_3.svg.png" width="70px" hight="70px">
+                    <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Groupe 3 - Aliments transformés </h5></h4>
+                    {% elif nova == 4 %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/NOVA_group_4.svg/320px-NOVA_group_4.svg.png" width="70px" hight="70px">
+                    <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                         Groupe 4 - Produits alimentaires et boissons ultra-transformés</h5></h4>
+                    {% else %}
+                    None </h4>
+                    {% endif %}
+                    {% endif %}
+                    <br/>
+                    <h3 style="color:#f47835";><strong>&nbsp;&nbsp;Directives nutritionnelles pour 100g : </strong></h3>
+                    <br/>
+                    <h4><strong>&nbsp;&nbsp;Energie(KJ): </strong>&nbsp;{{ nutriments.energy }} ({{energie}}/10)</h4>
+                    <br/>
+                    <h4><strong>&nbsp;&nbsp;Sucres(g): </strong>&nbsp;{{ nutriments.sugars }} ({{sucres}}/10)</h4>
+                    <br/>
+                    <h4><strong>&nbsp;&nbsp;Graisse-saturée(g): </strong>&nbsp;{{ fat }} ({{graisse}}/10)</h4>
+                    <br/>
+                    <h4><strong>&nbsp;&nbsp;Sodium(g): </strong>&nbsp;{{ nutriments.sodium }} ({{sodium}}/10)</h4>
+                    <br/>
+                    <h4><strong>&nbsp;&nbsp;Fruits & Légumes(%): </strong>&nbsp;{{ fruits }}
+                    {% if 'lait' in product_name.lower or 'milk' in product_name.lower or 'eau' in product_name.lower or 'water' in product_name.lower or 'boisson' in product_name.lower or 'jus' in product_name.lower %}
+                        ({{fruitleg}}/10)
+                    {% else %}({{fruitleg}}/5){% endif %}</h4>
+                    <br/>
+                    <h4><strong>&nbsp;&nbsp;Fibres(g): </strong>&nbsp;{{ nutriments.fibers }} ({{fibres}}/5)</h4>
+                    <br/>
+                    <h4><strong>&nbsp;&nbsp;Proteines(g): </strong>&nbsp;{{ nutriments.proteins }} ({{proteines}}/5)</h4>
+                    <br/>
+                    <h3 style="color:#f47835";><strong>&nbsp;&nbsp;Score Final: </strong></h3>
+                    {% if s %}
+                    {% if 'eau' in product_name.lower or 'water' in product_name.lower %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="https://lh3.googleusercontent.com/proxy/smF05ILtDslJuieCSf3yjVuNdWkxZPg-iorJIZYmhLQj20kqMXvvjiU7OCD0TiHb7pjjhUehD-ezXIqYQrnThNrykwgDOM-yRb02KysWTcI1XbgdkapTT_RYUdyMAMhTqgfp_YyoKsb4ML2zkOkFJB7qCm_q7w" width="400px" hight="400px">
+                    {% endif %}
+                    {% if 'lait' in product_name.lower or 'milk' in product_name.lower  or 'boisson' in product_name.lower or 'jus' in product_name.lower %}
+                    {% if s <= 1 %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="https://lh3.googleusercontent.com/proxy/20Taz9fh7p1RNuEtwQN-0GE6MC-DqdSN3RAcY1ekMX9HUqKjbOPhXtFFrZxRfSaFMXkscHjTn7fRoNlhfilci8UPkg165UzXn3Jq0FCb8jL874qWcoPcaXo_Xva3h9hR4w" width="400px" hight="400px">
+                    {% elif 2 <= s <= 5 %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="https://jusdolive.fr/wp-content/uploads/2019/11/nutriscore-1.jpg" width="400px" hight="400px">
+                    {% elif 6 <= s <= 9 %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="https://www.nutractiv.fr/files/cto_layout/images/RVB%20D%20cerne%C2%A6%C3%BC.jpg" width="400px" hight="400px">
+                    {% else %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT0QaI5-bfmS44eFHO0357WH_J3-HsQqa1_mQ&usqp=CAU" width="300px" hight="300px">
+                    {% endif %}
+                    {% else %}
+                    {% if s <= -1 %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="https://lh3.googleusercontent.com/proxy/20Taz9fh7p1RNuEtwQN-0GE6MC-DqdSN3RAcY1ekMX9HUqKjbOPhXtFFrZxRfSaFMXkscHjTn7fRoNlhfilci8UPkg165UzXn3Jq0FCb8jL874qWcoPcaXo_Xva3h9hR4w" width="400px" hight="400px">
+                    {% elif 0 <= s <= 2 %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="https://lh3.googleusercontent.com/proxy/20Taz9fh7p1RNuEtwQN-0GE6MC-DqdSN3RAcY1ekMX9HUqKjbOPhXtFFrZxRfSaFMXkscHjTn7fRoNlhfilci8UPkg165UzXn3Jq0FCb8jL874qWcoPcaXo_Xva3h9hR4w" width="400px" hight="400px">
+                    {% elif 3 <= s <= 10 %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="https://jusdolive.fr/wp-content/uploads/2019/11/nutriscore-1.jpg" width="400px" hight="400px">
+                    {% elif 11 <= s <= 18 %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="https://www.nutractiv.fr/files/cto_layout/images/RVB%20D%20cerne%C2%A6%C3%BC.jpg" width="400px" hight="400px">
+                    {% else %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT0QaI5-bfmS44eFHO0357WH_J3-HsQqa1_mQ&usqp=CAU" width="300px" hight="300px">
+                    {% endif %}
+                    {% endif %}
+                    {% else %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <img src="https://www.oliveoiltimes.com/wp-content/uploads/2019/10/129828507_s.jpg" width="400px" hight="400px">
+                    {% endif %}
+                    {% else %}
+                    <h2 style="color:#d41243";><strong>{{ products.status_verbose }}</strong></h2>
+                    {% endif %}
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}
