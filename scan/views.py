@@ -8,20 +8,16 @@ import time
 import cv2
 import openfoodfacts as food
 from .forms import Codeform
-
 def welcome(request):
     return render (request, 'scan/welcome.html')
-
-def nutri_code(request):
-    return render (request, 'scan/nutri_code.html')
-
 def code(request):
     if request.method == 'POST':
-        form = Codeform(request.POST)
+        form = Codeform(request.POST or None)
         if form.is_valid():
             barcodeData = form.cleaned_data['code']
             products = food.get_product(barcodeData)
             if products["status"]==0:
+                print(products)
                 product_name = 'no name'
                 brands_tag = 'no brand'
                 image = "No image to display"
@@ -43,6 +39,7 @@ def code(request):
                 fibers = 0
             else :
                 product = products['product']
+                print(product)
                 try:
                     nutriments = product['nutriments']
                 except:
@@ -274,8 +271,8 @@ def code(request):
                     s = n - (fruitleg + fibres)
             else:
                 s = n - (fruitleg + proteines + fibres)
-    return render (request,'scan/nutri_code.html', {'products':products,'image':image, 'nova':nova,'product_name':product_name,'brands_tag':brands_tag,'nutriments':nutriments,'fat':fat,'fruits':fruits,'sucres':sucres,'energie':energie,'fruitleg':fruitleg,'graisse':graisse,'sodium':sodium,'proteines':proteines,'fibres':fibres,'s':s})
-
+            return render (request,'scan/nutri_code.html', {'products':products,'image':image, 'nova':nova,'product_name':product_name,'brands_tag':brands_tag,'nutriments':nutriments,'fat':fat,'fruits':fruits,'sucres':sucres,'energie':energie,'fruitleg':fruitleg,'graisse':graisse,'sodium':sodium,'proteines':proteines,'fibres':fibres,'s':s})
+    return render (request, 'scan/nutri_code.html')
 def scan(request):
     vs = VideoStream(src=0).start()
     barcodeData = ""
